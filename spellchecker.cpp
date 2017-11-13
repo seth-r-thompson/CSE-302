@@ -4,24 +4,28 @@
 #include<fstream>
 #include<sstream>
 
+const string DICTIONARY_PATH = ""; // The file location of the dictionary.
+const string PERSONAL_DICTIONARY_PATH = ""; // The file location of the personal dictionary.
+
 using namespace std;
 
 class dictionary{
 	private:
-		unordered_map<string, string> word_list;
+		// TODO: Replace with unordered_set because value is never used.
+		unordered_map<string, string> word_list; // The key is the word in the dictionary.
 	public:
 		dictionary(){
 			string word;
 			
 			// Add words too the hash table
-			ifstream words("C:\\Users\\seth-r-thompson\\Documents\\CECS 302-01\\thompson_seth_04\\words.txt");
+			ifstream words(DICTIONARY_PATH);
 			while (words >> word){
 				word_list.emplace(word, word);
 			}
 			words.close();
 			
 			// Add personal words to the hash table
-			ifstream personal_words("C:\\Users\\seth-r-thompson\\Documents\\CECS 302-01\\thompson_seth_04\\personal_words.txt");
+			ifstream personal_words(PERSONAL_DICTIONARY_PATH);
 			while (personal_words >> word){
 				if (word_list.find(word) == word_list.end()) word_list.emplace(word, word); // Only emplaces if it's not present
 			}
@@ -88,11 +92,5 @@ void spellcheck(string file_name){
 	}	
 	
 	file.close();
-}
-
-int main(void){
-	spellcheck("C:\\Users\\seth-r-thompson\\Documents\\CECS 302-01\\thompson_seth_04\\my_document.txt");
-
-	return 0;
 }
 
