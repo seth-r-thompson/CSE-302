@@ -14,26 +14,27 @@ struct term {
 
 class polynomial {
 	private:
-		unordered_map<int, int> terms;
+		unordered_map<int, int> terms; // The hashtable stores each term of the polynomial.
+						// The key is the exponent, and the value is the coefficient.
 	public:
 		void add_term(int exp, int coeff){
-			if ( terms.find(exp) == terms.end() ){ // Key doesn't exist
-				terms.emplace(exp, coeff);
-			} else { // Key already exists
-				int new_coeff = coeff + terms.at(exp);
-				terms.erase(exp);
-				terms.emplace(exp, new_coeff);
+			if ( terms.find(exp) == terms.end() ){ // If the term with that exponent doesn't exist,
+				terms.emplace(exp, coeff); // Create the term in the hashtable.
+			} else { // If the term with that exponent does exist,
+				int new_coeff = coeff + terms.at(exp); // add the two coefficients,
+				terms.erase(exp); // get rid of the current term,
+				terms.emplace(exp, new_coeff); // and replace it with the new coefficient.
 			}
 		}
 		int size(){ return terms.size(); }
 		int get_coeff(int key){ return terms.at(key); }
-		void print(){
+		void print(){ // Prints out the polynomial in descending order.
 			for (int i = this->size() - 1; i >= 0; i--){
 				cout << this->get_coeff(i) << "x^" << i;
 				if (i != 0) cout << " + ";
 			} cout << endl;
 		}
-		list<term> sort_poly(){
+		list<term> sort_poly(){ // Uses the hashtable to create a sorted dynamic array that stores the same information.
 			list<term> sorted_terms(this->size());
 			
 			for (int i = this->size() - 1; i >= 0; i--){
@@ -50,25 +51,11 @@ polynomial multiply(polynomial p1, polynomial p2){
 	
 	for (int i = 0; i < p1.size(); i++){
 		for (int j = 0; j < p2.size(); j++){
-			int new_coeff = p1.get_coeff(i) * p2.get_coeff(j);
-			int new_exp = i + j;
+			int new_coeff = p1.get_coeff(i) * p2.get_coeff(j); // The coefficients of two terms are multiplied together,
+			int new_exp = i + j; // but the exponents of two terms are simply added together.
 			p3.add_term(new_exp, new_coeff);
 		}
 	}
 	
 	return p3;
 };
-
-int main(void){
-	polynomial p1; p1.add_term(0, 2); p1.add_term(1, 4); p1.add_term(2, 3);
-	polynomial p2; p2.add_term(0, 2); p2.add_term(1, 3);
-	polynomial p3 = multiply(p1, p2);	
-	
-	cout << "p1:\t"; p1.print(); 
-	cout << "p2:\t"; p2.print();
-	cout << "p3:\t"; p3.print();
-	
-	list<term> l = p3.sort_poly();
-	
-	return 0;
-}
